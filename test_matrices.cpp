@@ -1,10 +1,13 @@
-#if 0
+#include "test_matrices.h"
+
 #include <Adafruit_NeoPixel.h>
 
 #define MATRIX1_PIN 5
 #define MATRIX2_PIN 6
 #define NUM_LEDS 64
 #define BRIGHTNESS 50
+
+namespace test_matrices {
 
 // Parameter 1 = number of pixels in strip
 // Parameter 2 = Arduino pin number (most are valid)
@@ -122,7 +125,7 @@ void paintPixels2Strips(uint8_t *led_matrix, uint32_t color_0, uint32_t color_1 
   }
 }
 
-void setup() {
+void do_setup() {
   strip1.setBrightness(BRIGHTNESS);
   strip2.setBrightness(BRIGHTNESS);
   strip1.begin();
@@ -130,7 +133,7 @@ void setup() {
   show2Strips(); // Initialize all pixels to 'off'
 }
 
-void loop() {
+void do_loop() {
   uint16_t i, j;
   uint32_t off_color = strip1.Color(0,0,0);
   uint32_t red_color = strip1.Color(255,0,0);
@@ -192,4 +195,5 @@ void loop() {
   show2Strips();
   delay(3000);
 }
-#endif
+
+} // namespace test_matrices
