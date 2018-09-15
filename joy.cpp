@@ -4,120 +4,111 @@
 
 namespace joy {
 
-bool AnalogInput::read() const {
+bool Analog::read() const {
   return invert ?
     analogRead(pin) < threshold :
     analogRead(pin) > threshold;
 }
 
-bool DigitalInput::read() const {
+bool Digital::read() const {
   return invert ?
     digitalRead(pin) == 0 :
     digitalRead(pin) != 0;
 }
 
-OnFlick::OnFlick(Input& pin, const Options& o, EvtAction a) :
-  pin(&pin), options(&o) { this->triggerAction = a; }
-bool OnFlick::isEventTriggered() {
-  return step(pin->read(), millis(), data);
+bool Listener::is_firing() {
+  return sm(options, trigger, millis(), data);
 }
 
-bool OnFlick::step(bool triggered, unsigned long now, Data& d) const {
+bool on_flick(const Options& o, const Trigger& t, unsigned long now, Data& d) {
   switch (d.state) {
-    case WANT_TRIGGER:
-      if (triggered) {
-        d.state = WANT_RESET;
-        d.timeout = now + this->options->max_hold_time_ms;
+    case State::WANT_TRIGGER:
+      if (t.read()) {
+        d.state = State::WANT_RESET;
+        d.timeout = now + o.hold_time_ms;
       }
       break;
-    case WANT_RESET:
-      if (now > d.timeout) {
+    case State::WANT_RESET:
+      if (d.is_expired(now)) {
         // held too long, cancelled
-        d.state = DEBOUNCE;
-        d.timeout = now + this->options->debounce_time_ms;
+        d.state = State::DEBOUNCE;
+        d.timeout = now + o.debounce_time_ms;
       } else {
-        if (!triggered) {
-          d.state = DEBOUNCE;
-          d.timeout = now + this->options->debounce_time_ms;
+        if (!t.read()) {
+          d.state = State::DEBOUNCE;
+          d.timeout = now + o.debounce_time_ms;
           return true;
         }
       }
       break;
     case State::DEBOUNCE:
-      if (!triggered && now > d.timeout) {
-        d.state = WANT_TRIGGER;
+      if (!t.read() && d.is_expired(now)) {
+        d.state = State::WANT_TRIGGER;
       }
       break;
   }
   return false;
 }
 
-bool OnHold::isEventTriggered() {
-  return step(pin->read(), millis(), data);
-}
-
-bool OnHold::step(bool triggered, unsigned long now, Data& d) const {
+bool on_press(const Options& o, const Trigger& t, unsigned long now, Data& d) {
   switch (d.state) {
-    case WANT_TRIGGER:
-      if (triggered) {
-        d.state = WANT_HOLD;
-        d.timeout = now + this->options->min_hold_time_ms;
+    case State::WANT_TRIGGER:
+      if (t.read()) {
+        d.state = State::WANT_HOLD;
+        d.timeout = now + o.hold_time_ms;
       }
       break;
-    case WANT_HOLD:
-      if (triggered) {
-        if (now > d.timeout) {
-          d.state = DEBOUNCE;
-          d.timeout = now + this->options->debounce_time_ms;
+    case State::WANT_HOLD:
+      if (t.read()) {
+        if (d.is_expired(now)) {
+          // held for long enough
+          d.state = State::WANT_RESET;
+        }
+      } else {
+        // cancelled
+        d.state = State::DEBOUNCE;
+        d.timeout = now + o.debounce_time_ms;
+      }
+      break;
+    case State::WANT_RESET:
+      if (!t.read()) {
+        d.state = State::DEBOUNCE;
+        d.timeout = now + o.debounce_time_ms;
+        return true;
+      }
+      break;
+    case State::DEBOUNCE:
+      if (!t.read() && d.is_expired(now)) {
+        d.state = State::WANT_TRIGGER;
+      }
+      break;
+  }
+  return false;
+}
+
+bool on_hold(const Options& o, const Trigger& t, unsigned long now, Data& d) {
+  switch (d.state) {
+    case State::WANT_TRIGGER:
+      if (t.read()) {
+        d.state = State::WANT_HOLD;
+        d.timeout = now + o.hold_time_ms;
+      }
+      break;
+    case State::WANT_HOLD:
+      if (t.read()) {
+        if (d.is_expired(now)) {
+          d.state = State::DEBOUNCE;
+          d.timeout = now + o.debounce_time_ms;
           return true;
         }
       } else {
         // cancelled
-        d.state = DEBOUNCE;
-        d.timeout = now + this->options->debounce_time_ms;
+        d.state = State::DEBOUNCE;
+        d.timeout = now + o.debounce_time_ms;
       }
-    case DEBOUNCE:
-      if (!triggered && now > d.timeout) {
-        d.state = WANT_TRIGGER;
-      }
-      break;
-  }
-  return false;
-}
-
-bool OnPress::isEventTriggered() {
-  return step(pin->read(), millis(), data);
-}
-
-bool OnPress::step(bool triggered, unsigned long now, Data& d) const {
-  switch (d.state) {
-    case WANT_TRIGGER:
-      if (triggered) {
-        d.state = WANT_HOLD;
-        d.timeout = now + this->options->min_hold_time_ms;
-      }
-      break;
-    case WANT_HOLD:
-      if (triggered) {
-        if (now > d.timeout) {
-          d.state = WANT_RESET;
-        }
-      } else {
-        // cancelled
-        d.state = DEBOUNCE;
-        d.timeout = now + this->options->debounce_time_ms;
-      }
-      break;
-    case WANT_RESET:
-      if (!triggered) {
-        d.state = DEBOUNCE;
-        d.timeout = now + this->options->debounce_time_ms;
-        return true;
-      }
-      break;
-    case DEBOUNCE:
-      if (!triggered && now > d.timeout) {
-        d.state = WANT_TRIGGER;
+    case State::DEBOUNCE:
+      if (!t.read() && d.is_expired(now)) {
+        d.state = State::WANT_TRIGGER;
       }
       break;
   }
