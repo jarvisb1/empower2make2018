@@ -1,3 +1,4 @@
+#if 0
 #include <Adafruit_NeoPixel.h>
 
 #define MATRIX1_PIN 5
@@ -191,3 +192,4 @@ void loop() {
   show2Strips();
   delay(3000);
 }
+#endif
