@@ -1,9 +1,8 @@
 #pragma once
 
 #include <Adafruit_NeoPixel.h>
-#include "bitmap.h"
 
-namespace display {
+#include "bitmap.h"
 
 struct DualMatrixDriver {
   DualMatrixDriver(Adafruit_NeoPixel& left, Adafruit_NeoPixel& right, int num_pixels, int brightness) :
@@ -16,13 +15,30 @@ struct DualMatrixDriver {
     right.begin();
   }
 
+  // TODO delete
   void draw(const Bitmap& b) {
-    for (int i = 0; i < num_pixels; i++) {
-      const auto color = b.palette[b.pixels[i]];
+    const auto n = max(0, min(num_pixels, b.get_size()));
+    for (int i = 0; i < n; i++) {
+      const auto color = b.get_pixel(i);
       left.setPixelColor(i, color);
       right.setPixelColor(i, color);
     }
     dirty = true;
+  }
+
+  void draw(const bitmap::Image& img) {
+    const auto n = max(0, min(num_pixels, img.get_size()));
+    for (int i = 0; i < n; i++) {
+      const auto color = img.get_pixel(i);
+      left.setPixelColor(i, color);
+      right.setPixelColor(i, color);
+    }
+    dirty = true;
+  }
+
+  void clear() {
+    left.clear();
+    right.clear();
   }
 
   void show() {
@@ -39,5 +55,3 @@ struct DualMatrixDriver {
   int brightness;
   bool dirty = true;
 };
-
-} // namespace displays

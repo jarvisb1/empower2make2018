@@ -1,53 +1,10 @@
 #pragma once
 
-constexpr uint32_t make_color(uint8_t r, uint8_t g, uint8_t b, uint8_t w = 0) {
+inline constexpr uint32_t make_color(uint8_t r, uint8_t g, uint8_t b, uint8_t w = 0) {
   return ((uint32_t)w << 24) | ((uint32_t)r << 16) | ((uint32_t)g <<  8) | b;
 }
 
 void init_gamma_correction_table();
-
-struct Bitmap {
-  virtual const void * get_data() const { return NULL; }
-  virtual int get_size() const { return 0; }
-  virtual uint32_t get_pixel(int) const = 0;
-};
-
-struct BitmapImpl : Bitmap {
-  BitmapImpl(const uint8_t * data, int size) :
-    data(data), size(size) { }
-  const void * get_data() const override { return data; }
-  int get_size() const override { return size; }
-  uint32_t get_pixel(int) const override;
-  const uint8_t * data;
-  int size;
-};
-
-struct MonochromeBitmapImpl : Bitmap {
-  MonochromeBitmapImpl(const uint8_t * data, int size, uint32_t on = make_color(0, 0, 0, 255), uint32_t off = 0) :
-    data(data), size(size), on(on), off(off) { }
-  const void * get_data() const override { return data; }
-  int get_size() const override { return size; }
-  uint32_t get_pixel(int) const override;
-  const uint8_t * data;
-  int size;
-  uint32_t on, off;
-};
-
-struct CompressedBitmapImpl : Bitmap {
-  CompressedBitmapImpl(const uint32_t * palette, const uint8_t * data, int size) :
-    palette(palette), data(data), size(size) { }
-  const void * get_data() const override { return data; }
-  int get_size() const override { return size; }
-  uint32_t get_pixel(int) const override;
-  const uint32_t * palette;
-  const uint8_t * data;
-  int size;
-};
-
-struct ZeroBitmapImpl : Bitmap {
-  int get_size() const override { return 64; }
-  uint32_t get_pixel(int) const override { return 0; }
-};
 
 namespace bitmap {
 
