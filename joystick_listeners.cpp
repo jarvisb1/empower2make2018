@@ -16,4 +16,15 @@ joy::Listener down_listener(joystick_down_input, options, joy::on_flick);
 joy::Listener left_listener(joystick_left_input, options, joy::on_flick);
 joy::Listener right_listener(joystick_right_input, options, joy::on_flick);
 
+} // namespace on_flick
+
+namespace on_hold {
+
+const joy::Options options { JOY_LONG_TIMEOUT, JOY_DEBOUNCE_TIMEOUT };
+
+joy::Listener up_listener(joystick_up_input, options, joy::on_hold);
+joy::Listener down_listener(joystick_down_input, options, joy::on_hold);
+joy::Listener left_listener(joystick_left_input, options, joy::on_hold);
+joy::Listener right_listener(joystick_right_input, options, joy::on_hold);
+
 } // namespace on_hold
