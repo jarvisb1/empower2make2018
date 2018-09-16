@@ -34,6 +34,7 @@ private:
   int width;
   int height;
   int size;
+  int gamma_enable = true;
 };
 
 class ImageBitP : public Image {

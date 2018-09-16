@@ -11,10 +11,10 @@
 #include "icons.h"
 
 auto left_matrix = Adafruit_NeoPixel(
-  LED_MATRIX_SIZE, LEFT_LED_MATRIX_PIN, NEO_RGBW + NEO_KHZ800);
+  LED_MATRIX_SIZE, LEFT_LED_MATRIX_PIN, NEO_GRBW + NEO_KHZ800);
 
 auto right_matrix = Adafruit_NeoPixel(
-  LED_MATRIX_SIZE, RIGHT_LED_MATRIX_PIN, NEO_RGBW + NEO_KHZ800);
+  LED_MATRIX_SIZE, RIGHT_LED_MATRIX_PIN, NEO_GRBW + NEO_KHZ800);
 
 auto matrix_driver = DualMatrixDriver(
   left_matrix, right_matrix, LED_MATRIX_SIZE, LED_MATRIX_BRIGHTNESS);

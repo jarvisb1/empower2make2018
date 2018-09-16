@@ -11,14 +11,18 @@
 #define GAMMA_G 1
 #define GAMMA_B 2
 
+#define GCR 255.0
+#define GCG 240.0
+#define GCB 220.0
+
 static byte gamma_correction_table[3][NUM_COLOR_CHANNEL_VALUES];
 
 void init_gamma_correction_table() {
   for (int i = 0; i < NUM_COLOR_CHANNEL_VALUES; i++) {
     float f = pow((float)i / NUM_COLOR_CHANNEL_VALUES, GAMMA_CORRECTION);
-    gamma_correction_table[0][i] = (byte)(f * 255.0); //Red
-    gamma_correction_table[1][i] = (byte)(f * 240.0); //Green
-    gamma_correction_table[2][i] = (byte)(f * 220.0); //Blue
+    gamma_correction_table[0][i] = (byte)(f * GCR); //Red
+    gamma_correction_table[1][i] = (byte)(f * GCG); //Green
+    gamma_correction_table[2][i] = (byte)(f * GCB); //Blue
   }
 }
 
@@ -46,12 +50,15 @@ uint32_t Image24P::get_pixel(int i) const {
   const auto r = uint8_t(pgm_read_byte(offset));
   const auto g = uint8_t(pgm_read_byte(offset + 1));
   const auto b = uint8_t(pgm_read_byte(offset + 2));
-  return make_color(
-    gamma_correction_table[GAMMA_R][r/GAMMA_TABLE_COMPRESSION],
-    gamma_correction_table[GAMMA_G][g/GAMMA_TABLE_COMPRESSION],
-    gamma_correction_table[GAMMA_B][b/GAMMA_TABLE_COMPRESSION],
-    calc_white(r, g, b)
-  );
+  if (gamma_enable) {
+    return make_color(
+      gamma_correction_table[GAMMA_R][r/GAMMA_TABLE_COMPRESSION],
+      gamma_correction_table[GAMMA_G][g/GAMMA_TABLE_COMPRESSION],
+      gamma_correction_table[GAMMA_B][b/GAMMA_TABLE_COMPRESSION],
+      0 // calc_white(r, g, b)
+    );
+  }
+  return make_color(r, g, b, 0);
 }
 
 uint32_t ImageBitP::get_pixel(int i) const {
