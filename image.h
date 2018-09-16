@@ -55,6 +55,26 @@ private:
   uint32_t off;
 };
 
+class ImageSimpleMono : public Image {
+public:
+  ImageSimpleMono(const uint8_t * pdata, int width, int height, uint32_t on = make_color(0, 0, 0, 255), uint32_t off = 0) :
+    pdata(pdata), width(width), height(height), size(width * height), on(on), off(off) { }
+
+  int get_size() const override { return size; }
+  int get_width() const override { return width; }
+  int get_height() const override { return height; }
+  const void * get_data() const override { return pdata; }
+  int get_pixel_size_bits() const { return 8; }
+  uint32_t get_pixel(int i) const override { return pdata[i] ? on : off; }
+private:
+  const uint8_t * pdata;
+  int width;
+  int height;
+  int size;
+  uint32_t on;
+  uint32_t off;
+};
+
 class ImageZero : public Image {
 public:
   ImageZero(int width, int height) :

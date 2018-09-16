@@ -4,8 +4,8 @@
 
 // Icon completely describes a display option.
 struct Icon {
-  const bitmap::Image& preview;
   const bitmap::Image& image;
+  const bitmap::Image& preview;
 };
 
 extern const Icon HappyIcon;

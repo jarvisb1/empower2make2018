@@ -4,8 +4,8 @@
 
 joy::Analog joystick_up_input(JOY_UP_DOWN_PIN, JOY_HIGH_THRESHOLD);
 joy::Analog joystick_down_input(JOY_UP_DOWN_PIN, JOY_LOW_THRESHOLD, true);
-joy::Analog joystick_left_input(JOY_LEFT_RIGHT_PIN, JOY_HIGH_THRESHOLD);
-joy::Analog joystick_right_input(JOY_LEFT_RIGHT_PIN, JOY_LOW_THRESHOLD, true);
+joy::Analog joystick_left_input(JOY_LEFT_RIGHT_PIN, JOY_LOW_THRESHOLD, true);
+joy::Analog joystick_right_input(JOY_LEFT_RIGHT_PIN, JOY_HIGH_THRESHOLD);
 
 namespace on_flick {
 
