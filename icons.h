@@ -1,10 +1,6 @@
 #pragma once
 
-namespace bitmap {
-
-class Image;
-
-}
+#include "image.h"
 
 // Icon completely describes a display option.
 struct Icon {
@@ -22,3 +18,4 @@ extern const Icon GreenExclamationIcon;
 extern const Icon GreenHandIcon;
 extern const Icon LightIcon;
 extern const Icon RedHandIcon;
+extern const Icon EmptyIcon;

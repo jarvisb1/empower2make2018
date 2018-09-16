@@ -1,10 +1,10 @@
 #pragma once
 
-inline constexpr uint32_t make_color(uint8_t r, uint8_t g, uint8_t b, uint8_t w = 0) {
-  return ((uint32_t)w << 24) | ((uint32_t)r << 16) | ((uint32_t)g <<  8) | b;
-}
+#include <Arduino.h>
 
 void init_gamma_correction_table();
+
+uint32_t make_color(uint8_t r, uint8_t g, uint8_t b, uint8_t w = 0);
 
 namespace bitmap {
 
@@ -53,6 +53,23 @@ private:
   int size;
   uint32_t on;
   uint32_t off;
+};
+
+class ImageZero : public Image {
+public:
+  ImageZero(int width, int height) :
+    width(width), height(height), size(width * height) { }
+  int get_size() const override { return size; }
+  int get_width() const override { return width; }
+  int get_height() const override { return height; }
+  const void * get_data() const override { return NULL; }
+  int get_pixel_size_bits() const { return 0; }
+  uint32_t get_pixel(int) const override { return 0; }
+  uint32_t get_pixel(int, int) const override { return 0; }
+private:
+  int width;
+  int height;
+  int size;
 };
 
 } // namespace bitmap

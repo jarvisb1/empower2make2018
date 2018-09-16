@@ -1,5 +1,7 @@
 #pragma once
 
+#include <Arduino.h>
+
 #define LED_MATRIX_SIZE 64
 #define LED_MATRIX_BRIGHTNESS 100
 #define NUM_LEDS_PER_RING 16
@@ -17,6 +19,14 @@
 #define JOY_DEBOUNCE_TIMEOUT 500
 
 #define GAMMA_CORRECTION 4.0
+
+#define DEBUG_APP
+
+#ifdef DEBUG_APP
+#define DEBUG_PRINT(s) Serial.println(F(s));
+#else
+#define DEBUG_PRINT(s)
+#endif
 
 /* 
 

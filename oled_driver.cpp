@@ -18,15 +18,16 @@ void Driver::show() {
 }
 
 void Driver::render() {
+  if (!img) {
+    return;
+  }
+  const auto data = (const uint8_t*)(img->get_data());
+  if (!data) {
+    return;
+  }
   ctrl.setRot90();
-  // TODO delete
-  if (bmp) {
-    ctrl.drawXBMP(20, 40, 32, 32, (const uint8_t*)bmp->get_data());
-  }
-  // TODO calculate center
-  if (img) {
-    ctrl.drawXBMP(20, 40, img->get_width(), img->get_height(), (const uint8_t*)img->get_data());
-  }
+  // TODO center in display
+  ctrl.drawXBMP(20, 40, img->get_width(), img->get_height(), (const uint8_t*)img->get_data());
 }
 
 } // namespace oled

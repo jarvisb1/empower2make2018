@@ -22,6 +22,10 @@ void init_gamma_correction_table() {
   }
 }
 
+uint32_t make_color(uint8_t r, uint8_t g, uint8_t b, uint8_t w) {
+  return ((uint32_t)w << 24) | ((uint32_t)r << 16) | ((uint32_t)g <<  8) | b;
+}
+
 namespace {
 
 float saturation(uint8_t r, uint8_t g, uint8_t b) {
@@ -53,7 +57,7 @@ uint32_t Image24P::get_pixel(int i) const {
 uint32_t ImageBitP::get_pixel(int i) const {
   const auto index = uint8_t(i) / 0x08;
   const auto mask = 0x01 << (uint8_t(i) & 0x04);
-  return (uint8_t(pgm_read_byte(data + index)) & mask) ? on : off;
+  return (uint8_t(pgm_read_byte(pdata + index)) & mask) ? on : off;
 }
 
 } // namespace bitmap
