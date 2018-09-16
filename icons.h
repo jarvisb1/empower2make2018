@@ -4,7 +4,10 @@
 
 // Icon completely describes a display option.
 struct Icon {
-  const bitmap::Image& image;
+  const bitmap::Image * frame_a;
+  const bitmap::Image * frame_b;
+  const bool toggle;
+  const unsigned long frame_rate_ms;
   const bitmap::Image& preview;
 };
 

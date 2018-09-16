@@ -35,11 +35,13 @@ void setup() {
   oled_driver.init();
   matrix_driver.init();
   matrix_driver.show();
-  DEBUG_PRINT("Setup complete")
+  DEBUG_PRINT(F("Setup complete"))
 }
 
 struct AppState {
   const Icon * selected_icon = &EmptyIcon;
+  bool cur_frame = false;
+  unsigned long frame_timeout = 0;
   bool dirty = false;
 
   void select_icon(const Icon& icon) {
@@ -47,15 +49,43 @@ struct AppState {
       return;
     }
     selected_icon = &icon;
+    cur_frame = false;
+    frame_timeout = millis() + icon.frame_rate_ms;
+    dirty = true;
+  }
+
+  void advance_frame_pointer() {
+    if (!selected_icon) { return; }
+    if (!selected_icon->toggle) { return; }
+    if (selected_icon->frame_rate_ms <= 0) { return; }
+    const unsigned long now = millis();
+    if (now < frame_timeout) { return; } // not ready to flip yet
+    cur_frame = !cur_frame;
+    frame_timeout = now + selected_icon->frame_rate_ms;
+    DEBUG_PRINT(F("Advancing frame pointer"))
+    DEBUG_PRINT(F("Now"))
+    DEBUG_PRINT(now)
+    DEBUG_PRINT(F("Frame Rate"))
+    DEBUG_PRINT(selected_icon->frame_rate_ms)
+    DEBUG_PRINT(F("Next Frame Timeout"))
+    DEBUG_PRINT(frame_timeout)
     dirty = true;
   }
 
   void update() {
+    advance_frame_pointer();
     if (!dirty || !selected_icon) {
       return;
     }
+    DEBUG_PRINT(F("Updating"))
+    DEBUG_PRINT(F("FrameIndex"))
+    DEBUG_PRINT(cur_frame)
     oled_driver.draw(selected_icon->preview);
-    matrix_driver.draw(selected_icon->image);
+    if (!cur_frame) {
+      matrix_driver.draw(*selected_icon->frame_a);
+    } else {
+      matrix_driver.draw(*selected_icon->frame_b);
+    }
     oled_driver.show();
     matrix_driver.show();
     dirty = false;
@@ -64,16 +94,16 @@ struct AppState {
 
 void loop() {
   if (on_flick::up_listener.is_firing()) {
-    DEBUG_PRINT("Up selected")
+    DEBUG_PRINT(F("Up selected"))
     app_menu.select_icon(AlertIcon);
   } else if (on_flick::down_listener.is_firing()) {
-    DEBUG_PRINT("Down selected")
+    DEBUG_PRINT(F("Down selected"))
     app_menu.select_icon(EmptyIcon);
   } else if (on_flick::left_listener.is_firing()) {
-    DEBUG_PRINT("Left selected")
+    DEBUG_PRINT(F("Left selected"))
     app_menu.select_icon(QuestionIcon);
   } else if (on_flick::right_listener.is_firing()) {
-    DEBUG_PRINT("Right selected")
+    DEBUG_PRINT(F("Right selected"))
     app_menu.select_icon(LightIcon);
   }
   app_menu.update();

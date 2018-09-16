@@ -20,10 +20,11 @@
 
 #define GAMMA_CORRECTION 8.0
 
-#define DEBUG_APP
+//#define DEBUG_APP
 
 #ifdef DEBUG_APP
-#define DEBUG_PRINT(s) Serial.println(F(s));
+#define DEBUG_PRINT(s) if (Serial) { Serial.println(s); }
+#define DEBUG_PRINT_ADDR(p) if (Serial) { Serial.print(p, HEX); }
 #else
 #define DEBUG_PRINT(s)
 #endif

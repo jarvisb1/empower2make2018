@@ -147,18 +147,20 @@ const uint8_t PROGMEM img_sun[8][8][3] = {
   {{36,30,10},{36,30,10},{255,220,35},{255,230,90},{255,230,90},{255,220,35},{36,30,10},{36,30,10}},
 };
 
+const auto FloodWhiteImage = bitmap::ImageFill(8, 8);
+const auto EmptyImage = bitmap::ImageZero(8, 8);
+
 const auto AlertImage = bitmap::Image24P((const uint8_t*)img_warning, 8, 8);
 const auto AlertPreview = bitmap::ImageBitP((const uint8_t*)&Previews[1], 32, 32);
-const Icon AlertIcon { AlertImage, AlertPreview };
+const Icon AlertIcon { &AlertImage, &FloodWhiteImage, true, 1000, AlertPreview };
 
 const auto QuestionImage = bitmap::Image24P((const uint8_t*)img_question, 8, 8);
 const auto QuestionPreview = bitmap::ImageBitP((const uint8_t*)&Previews[6], 32, 32);
-const Icon QuestionIcon { QuestionImage, QuestionPreview };
+const Icon QuestionIcon { &QuestionImage, &EmptyImage, false, 0, QuestionPreview };
 
 const auto LightImage = bitmap::Image24P((const uint8_t*)img_sun, 8, 8);
 const auto LightPreview = bitmap::ImageBitP((const uint8_t*)&Previews[7], 32, 32);
-const Icon LightIcon { LightImage, LightPreview };
+const Icon LightIcon { &LightImage, &EmptyImage, false, 0, LightPreview };
 
-const auto EmptyImage = bitmap::ImageZero(8, 8);
 const auto EmptyPreview = bitmap::ImageZero(0, 0);
-const Icon EmptyIcon { EmptyImage, EmptyPreview };
+const Icon EmptyIcon { &EmptyImage, &EmptyImage, false, 0, EmptyPreview };

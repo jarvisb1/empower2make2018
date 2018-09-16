@@ -1,5 +1,7 @@
 #include "led_matrix_driver.h"
 
+#include "configuration.h"
+
 #define ROT_SIZE 7
 
 int rotate_90_x(int x, int y) { return -y + ROT_SIZE; }
@@ -20,6 +22,8 @@ void DualMatrixDriver::init() {
 static int to_index(int x, int y, int side = 8) { return y * side + x; }
 
 void DualMatrixDriver::draw(const bitmap::Image& img) {
+  DEBUG_PRINT(F("Drawing Matrix"))
+  DEBUG_PRINT(uint16_t(&img))
   const auto mx = img.get_width();
   const auto my = num_pixels / mx;
   for (int y = 0; y < my; y++) {

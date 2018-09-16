@@ -93,4 +93,22 @@ private:
   int size;
 };
 
+class ImageFill : public Image {
+public:
+  ImageFill(int width, int height, uint32_t fill = make_color(0, 0, 0, 255)) :
+    width(width), height(height), size(width * height), fill(fill) { }
+  int get_size() const override { return size; }
+  int get_width() const override { return width; }
+  int get_height() const override { return height; }
+  const void * get_data() const override { return NULL; }
+  int get_pixel_size_bits() const { return 0; }
+  uint32_t get_pixel(int) const override { return fill; }
+  uint32_t get_pixel(int, int) const override { return fill; }
+private:
+  int width;
+  int height;
+  int size;
+  uint32_t fill;
+};
+
 } // namespace bitmap
