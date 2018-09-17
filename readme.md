@@ -40,17 +40,23 @@ The following configuration values can be adjusted in `app/configuration.h`:
 
 ```c++
 #define JOY_HIGH_THRESHOLD 800
-// This is how far you need to move the joystick along one axis before motion is detected. Joystick values go from 0 to 1023 with 512 being roughly in the center.
+// This is how far you need to move the joystick along one axis before motion is
+// registered.
+// Joystick values range from 0 to 1023 with 512 being roughly in the center.
 
 #define JOY_LOW_THRESHOLD 200
-// This is how far you need to move the joystick the opposite direction along the same axis before motion is detected.
+// This is how far you need to move the joystick the opposite direction
+// along the same axis before motion is registered.
 // Currently, both Up/Down and Left/Right share the same thresholds.
 
 #define JOY_LONG_TIMEOUT 1000
-// This is the minimum length of time in milliseconds that you need to hold down the joystick in a particular direction before motion is detected when "Hold/Press" modes are active.
+// This is the minimum length of time in milliseconds that you need to hold down
+// the joystick in a particular direction before motion is detected when
+// "Hold/Press" modes are active.
 
 #define JOY_SHORT_TIMEOUT 500
-// This is the maximum length of time in milliseconds that you need to hold down the joystick in a particular direction for motion detection when the "Flick" mode is active.
+// This is the maximum length of time in milliseconds that you need to hold down
+// the joystick in a particular direction for motion detection when "Flick" mode is active.
 
 #define JOY_DEBOUNCE_TIMEOUT 500
 // This is the length of time in milliseconds after detecting motion that the joystick
