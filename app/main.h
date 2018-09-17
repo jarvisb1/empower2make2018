@@ -93,16 +93,16 @@ struct AppState {
 } app_menu;
 
 void loop() {
-  if (on_flick::up_listener.is_firing()) {
+  if (JOY_MODE::up_listener.is_firing()) {
     DEBUG_PRINT(F("Up selected"))
     app_menu.select_icon(AlertIcon);
-  } else if (on_flick::down_listener.is_firing()) {
+  } else if (JOY_MODE::down_listener.is_firing()) {
     DEBUG_PRINT(F("Down selected"))
     app_menu.select_icon(EmptyIcon);
-  } else if (on_flick::left_listener.is_firing()) {
+  } else if (JOY_MODE::left_listener.is_firing()) {
     DEBUG_PRINT(F("Left selected"))
     app_menu.select_icon(QuestionIcon);
-  } else if (on_flick::right_listener.is_firing()) {
+  } else if (JOY_MODE::right_listener.is_firing()) {
     DEBUG_PRINT(F("Right selected"))
     app_menu.select_icon(LightIcon);
   }

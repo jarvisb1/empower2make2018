@@ -18,6 +18,9 @@
 #define JOY_SHORT_TIMEOUT 500
 #define JOY_DEBOUNCE_TIMEOUT 500
 
+// Valid joystick modes are "on_flick", "on_press", and "on_hold"
+#define JOY_MODE on_flick
+
 #define GAMMA_CORRECTION 8.0
 
 //#define DEBUG_APP
