@@ -88,5 +88,5 @@ The `JOY_LONG_TIMEOUT` configuration setting controls the minimum amount of time
 
 ##### on_hold
 
-When this mode is active, releasing the joystick is not required to be released before triggering. All that is required is to hold down the joystick longer than the timeout.
+Unlike the other two modes, when this mode is active, it is not required to be release the joystick before the event is triggered.  All that is required is to hold down the joystick longer than the timeout.
 The `JOY_LONG_TIMEOUT` configuration setting controls the minimum amount of time the joystick must be held down in order to be detected.
